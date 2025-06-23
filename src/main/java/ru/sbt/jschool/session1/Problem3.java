@@ -1,3 +1,5 @@
+package ru.sbt.jschool.session1;
+
 import java.util.Map;
 
 public class Problem3 {

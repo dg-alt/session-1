@@ -1,3 +1,5 @@
+package ru.sbt.jschool.session1;
+
 import java.util.Properties;
 
 public class Problem2 {
