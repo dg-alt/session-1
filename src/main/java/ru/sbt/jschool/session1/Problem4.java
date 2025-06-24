@@ -6,46 +6,44 @@ import java.util.Properties;
 
 public class Problem4 {
     public static void main(String[] args) {
-        int count = getCountFromSources(args);
+        try {
+            int count = getCountFromSources(args);
 
-        if (count == -1) {
+            if (count == -1) {
+                printUsage();
+                return;
+            }
+
+            printHelloWorld(count);
+        } catch (NumberFormatException e) {
+            System.err.println("Ошибка: Некорректный формат числа");
+            e.printStackTrace();
             printUsage();
-            return;
+        } catch (IOException e) {
+            System.err.println("Ошибка чтения файла:");
+            e.printStackTrace();
+            printUsage();
         }
-
-        printHelloWorld(count);
     }
 
-    private static int getCountFromSources(String[] args) {
+    private static int getCountFromSources(String[] args) throws NumberFormatException, IOException {
         // 1. Проверяем аргументы командной строки (JSCHOOl1_COUNT=XXX)
         for (String arg : args) {
             if (arg.startsWith("JSCHOOl1_COUNT=")) {
-                try {
-                    return Integer.parseInt(arg.split("=")[1]);
-                } catch (NumberFormatException e) {
-                    System.err.println("Ошибка");
-                }
+                return Integer.parseInt(arg.split("=")[1]);
             }
         }
 
         // 2. Проверяем системную переменную (-DJSCHOOl1_COUNT=XXX)
         String sysProp = System.getProperty("JSCHOOl1_COUNT");
         if (sysProp != null) {
-            try {
-                return Integer.parseInt(sysProp);
-            } catch (NumberFormatException e) {
-                System.err.println("Ошибка");
-            }
+            return Integer.parseInt(sysProp);
         }
 
         // 3. Проверяем переменную окружения
         String envVar = System.getenv("JSCHOOl1_COUNT");
         if (envVar != null) {
-            try {
-                return Integer.parseInt(envVar);
-            } catch (NumberFormatException e) {
-                System.err.println("Ошибка");
-            }
+            return Integer.parseInt(envVar);
         }
 
         // 4. Проверяем properties-файл, если указан в переменной окружения
@@ -56,14 +54,8 @@ public class Problem4 {
                 props.load(fis);
                 String countStr = props.getProperty("JSCHOOl1_COUNT");
                 if (countStr != null) {
-                    try {
-                        return Integer.parseInt(countStr);
-                    } catch (NumberFormatException e) {
-                        System.err.println("Ошибка");
-                    }
+                    return Integer.parseInt(countStr);
                 }
-            } catch (IOException e) {
-                System.err.println("Ошибка: " + e.getMessage());
             }
         }
 
@@ -84,5 +76,4 @@ public class Problem4 {
         System.out.println("4. Через properties-файл: JSCHOOL1_PROPERTIES_FILE=путь/к/файлу.properties");
         System.out.println("Где XXX - целое число, сколько раз вывести сообщение");
     }
-
 }
